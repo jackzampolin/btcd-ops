@@ -1,0 +1,11 @@
+[Unit]
+Description=Btcd daemon
+After=network.target
+
+[Service]
+ExecStart=/home/ubuntu/go/bin/btcd
+User=ubuntu
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

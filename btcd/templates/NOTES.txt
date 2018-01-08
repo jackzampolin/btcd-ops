@@ -1,0 +1,15 @@
+Btcd can be accessed via port 8334 on the following DNS name from within your cluster:
+
+- http://{{ template "btcd.fullname" . }}.{{ .Release.Namespace }}:8334
+
+To forward the RPC port to localhost:8334 run the following (you will need to modify your rpcuser/pass creds blockstack/blockstack):
+
+- kubectl port-forward --namespace {{ .Release.Namespace }} $(kubectl get pods --namespace {{ .Release.Namespace }} -l app={{ template "btcd.fullname" . }} -o jsonpath='{ .items[0].metadata.name }') 8334:8334
+
+You can also connect to the btcctl cli from inside the container. To open a shell session in the btcd pod run the following:
+
+- kubectl exec -i -t --namespace {{ .Release.Namespace }} $(kubectl get pods --namespace {{ .Release.Namespace }} -l app={{ template "btcd.fullname" . }} -o jsonpath='{.items[0].metadata.name}') /bin/sh
+
+To tail the logs for the btcd pod run the following:
+
+- kubectl logs -f --namespace {{ .Release.Namespace }} $(kubectl get pods --namespace {{ .Release.Namespace }} -l app={{ template "btcd.fullname" . }} -o jsonpath='{ .items[0].metadata.name }')

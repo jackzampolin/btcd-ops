@@ -1,0 +1,14 @@
+name: btcd
+version: 0.2.0
+description: A bitcoin inplementation in golang
+keywords:
+- bitcoin
+- cryptocurrency
+- golang
+home: https://github.com/jackzampolin/btcd-docker
+sources:
+- https://github.com/btcsuite/btcd
+maintainers:
+- name: Jack Zampolin
+  email: jack@blockstack.com
+engine: gotpl

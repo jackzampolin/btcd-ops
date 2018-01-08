@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "btcd.fullname" . }}
+  labels:
+    app: {{ template "btcd.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  btcd.conf: |+
+    [Application Options]
+    rpcuser=blockstack
+    rpcpass=blockstack
+    rpclisten=0.0.0.0
+    listen=0.0.0.0
+    txindex=1
+    addrindex=1
+    debuglevel=info

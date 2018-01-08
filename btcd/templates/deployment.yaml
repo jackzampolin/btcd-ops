@@ -1,0 +1,77 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "btcd.fullname" . }}
+  labels:
+    app: {{ template "btcd.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "btcd.fullname" . }}
+        bitcoin: bitcoin
+    spec:
+      containers:
+      - name: {{ template "btcd.fullname" . }}
+        image: "{{ .Values.image.repo }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        command:
+        - "btcd"
+        - "--rpcuser=blockstack"
+        - "--rpcpass=blockstack"
+        - "--rpclisten=0.0.0.0"
+        - "--listen=0.0.0.0"
+        - "--txindex"
+        - "--addrindex"
+        ports:
+        - name: wallet
+          containerPort: 8332
+        - name: p2p
+          containerPort: 8333
+        - name: rpc
+          containerPort: 8334
+        # livenessProbe:
+        #   exec:
+        #     command:
+        #     - /usr/bin/btcctl
+        #     - ping
+        #   initialDelaySeconds: 120
+        #   timeoutSeconds: 5
+        # readinessProbe:
+        #   exec:
+        #     command:
+        #     - /usr/bin/btcctl
+        #     - ping
+        #   initialDelaySeconds: 30
+        #   timeoutSeconds: 5
+        volumeMounts:
+        - name: data
+          mountPath: /root/.btcd
+        # - name: config
+        #   mountPath: /root/.btcd
+      volumes:
+      - name: data
+      {{- if .Values.persistence.enabled }}
+        {{- if not (empty .Values.persistence.name) }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.name }}
+        {{- else }}
+        persistentVolumeClaim:
+          claimName: {{ template "btcd.fullname" . }}
+        {{- end }}
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
+      # - name: config
+      #   configMap:
+      #     name: {{ template "btcd.fullname" . }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+      {{- end -}}

@@ -1,0 +1,29 @@
+{{- if .Values.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+{{- if .Values.service.annotations }}
+  annotations:
+{{ toYaml .Values.service.annotations | indent 4 }}
+{{- end }}
+  name: {{ template "btcd.fullname" . }}
+  labels:
+    app: {{ template "btcd.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - name: wallet
+    port: 8332
+    targetPort: 8332
+  - name: p2p
+    port: 8333
+    targetPort: 8333
+  - name: rpc
+    port: 8334
+    targetPort: 8334
+  selector:
+    app: {{ template "btcd.fullname" . }}
+{{- end }}

@@ -1,0 +1,11 @@
+version: '2'
+services:
+  btcd:
+    image: 'quay.io/blockstack/btcd:latest'
+    volumes:
+      - '/Users/johnzampolin/Library/Application Support/Btcd/:/root/.btcd/'
+    ports:
+      - 8333:8333
+      - 8332:8332
+      - 8334:8334
+    restart: always

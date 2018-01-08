@@ -1,0 +1,50 @@
+## btcd image version
+## ref: https://quay.io/repository/blockstack/btcd
+image:
+  repo: "quay.io/blockstack/btcd"
+  tag: "latest"
+  pullPolicy: Always
+
+## Specify a service type
+## NodePort is default
+## ref: http://kubernetes.io/docs/user-guide/services/
+##
+service:
+  enabled: true
+  ## Add annotations to service
+  # annotations: {}
+  type: ClusterIP
+
+## Persist data to a persistent volume
+##
+persistence:
+  enabled: true
+  ## If true will use an existing PVC instead of creating one
+  # useExisting: false
+  ## Name of existing PVC to be used in the btcd deployment
+  # name:
+  ## btcd data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  accessMode: ReadWriteOnce
+  size: 250Gi
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+resources:
+  requests:
+    memory: 1Gi
+    cpu: 0.1
+  limits:
+    memory: 16Gi
+    cpu: 4
+
+## Node labels for pod assignment
+## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+##
+nodeSelector: {}
